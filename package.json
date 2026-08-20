@@ -1,0 +1,25 @@
+{
+  "name": "frontend-repo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ina352/frontend-repo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ina352/frontend-repo/issues"
+  },
+  "homepage": "https://github.com/ina352/frontend-repo#readme",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.19.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  }
+}
