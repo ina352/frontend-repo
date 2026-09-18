@@ -12,6 +12,8 @@ function App() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const [copied, setCopied] = useState(false);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -20,6 +22,7 @@ function App() {
     e.preventDefault();
     setLoading(true);
     setResult(null);
+    setCopied(false);
 
     try {
       const response = await axios.post('http://localhost:8000/api/generate-text', formData);
@@ -29,6 +32,31 @@ function App() {
       alert("백엔드 서버 연동 실패! backend-repo에서 uvicorn 서버가 켜져 있는지 확인해 주세요.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const copyAll = async () => {
+    if (!result) return;
+
+    const hashtags = Array.isArray(result.hashtags)
+      ? result.hashtags.join(' ')
+      : result.hashtags;
+
+    const fullText = `${result.main_headline}
+
+    ${result.body_content}
+
+    ${hashtags}`;
+
+    try {
+      await navigator.clipboard.writeText(fullText);
+      setCopied(true);
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (error) {
+      console.error("복사 실패:", error);
+      alert("복사에 실패했습니다.");
     }
   };
 
@@ -169,7 +197,7 @@ function App() {
               {result.body_content}
             </div>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '25px' }}>
               {(Array.isArray(result.hashtags) ? result.hashtags : [result.hashtags]).map((tag, idx) => (
                 <span key={idx} style={{
                   backgroundColor: '#FFFA65',
@@ -184,7 +212,17 @@ function App() {
                 </span>
               ))}
             </div>
+	    <button
+	      onClick={copyAll}
+	      style={{width: '100%', padding: '9px', backgroundColor: copied ? '#00B894' : '#FF4757', 
+	        color: '#FFFFFF', border: '3px solid #000000', borderRadius: '20px', fontSize: '15px', fontWeight: '900',
+	        cursor: 'pointer', boxShadow: '4px 4px 0px #000000', transition: 'all 0.15s ease'
+	      }}>
+	        {copied ? '✓ 복사되었어요!' : '📋 전체 내용 복사'}
+	    </button>
           </div>
+
+	  
         )}
 
       </div>
